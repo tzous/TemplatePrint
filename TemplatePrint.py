@@ -9,6 +9,11 @@ import os
 import os.path
 import shutil
 from MyTools import MyTools
+import six
+import packaging
+import packaging.version
+import packaging.specifiers
+import packaging.requirements
 
 from SysData import SysData  # 系统参数类
 from Voucher import Voucher  # 模板类
@@ -446,7 +451,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # 树形控件右键事件
     def showContextMenu(self, ev):
         item = self.treeWidget.itemAt(ev)  # ev为鼠标右击位置，相对于控件内部的QPoint
-        if item == None:
+        if item == None:                   #不是点在树控件的项目上，则清除当前选择
             self.treeWidget.clearSelection()
             return
         self.onClickedTreeWidget()  # 先执行左键单击事件，设定当前模板等信息
