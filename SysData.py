@@ -3,6 +3,7 @@ from PyQt5 import QtGui
 
 import sqlite3
 import os
+import sys
 
 
 # 凭证元素类
@@ -24,7 +25,13 @@ class SysData:
         self.font = QtGui.QFont('宋体', 10, QtGui.QFont.Normal)  # 默认字体
         self.printer = None  # 默认打印机
         self.autosave = False  # 打印记录是否自动保存
-        self.appPath, filename = os.path.split(os.path.abspath(__file__))
+        # self.appPath, filename = os.path.split(os.path.abspath(__file__))
+        if hasattr(sys, '_MEIPASS'):
+            # PyInstaller会创建临时文件夹temp
+            # 并把路径存储在_MEIPASS中
+            self.appPath = os.path.dirname(os.path.realpath(sys.executable))
+        else:
+            self.appPath, filename = os.path.split(os.path.abspath(__file__))
         self.parmdb = self.appPath + '/data/sysdata.db'
         self.dataPath = self.appPath + '/data/'  # 系统数据路径
         self.templatePath = self.appPath + '/template/'  # 系统模板路径
@@ -60,7 +67,7 @@ class SysData:
             # 本系统名称,当前最大类别编号,当前最大凭证编号,x偏移,y偏移,默认打印机,默认字体,打印记录是否自动保存
             sql = "INSERT INTO sysparm (sysname,maxtypeid,maxvoucherid,leftmargin,topmargin,printer,defaultfont,autosave,batchprint) \
                 values ('%s',%d,%d,%d,%d,'%s','%s','%s','%s')" % (
-            '简单凭证打印', 3, 5, 11, 11, '', QtGui.QFont('宋体', 10, QtGui.QFont.Normal).toString(), 'False', 'True')
+                '简单凭证打印', 3, 5, 11, 11, '', QtGui.QFont('宋体', 10, QtGui.QFont.Normal).toString(), 'False', 'True')
             c.execute(sql)
             # 类别编号，类别名称，父类别编号
             sql = "INSERT INTO types (typeid,typename,parentid) \
@@ -133,7 +140,7 @@ class SysData:
         c = conn.cursor()
         # 本系统名称,当前最大类别编号,当前最大凭证编号,x偏移,y偏移,默认打印机,默认字体,打印记录是否自动保存
         sql = "update sysparm set leftmargin=%d,topmargin=%d,batchprint='%s' " % (
-        self.leftmargin, self.topmargin, str(self.batchprint))
+            self.leftmargin, self.topmargin, str(self.batchprint))
         c.execute(sql)
 
         conn.commit()
@@ -154,7 +161,7 @@ class SysData:
         # 凭证编号，凭证名称，凭证显示名称，类别编号
         sql = "INSERT INTO vouchers (vid,vname,vtext,typeid,offsetx,offsety) \
                 values (%d,'%s','%s',%d,%d,%d)" % (
-        self.maxvoucherid, v.getName(), v.getText(), int(tid), int(v.offsetx), int(v.offsety))
+            self.maxvoucherid, v.getName(), v.getText(), int(tid), int(v.offsetx), int(v.offsety))
         c.execute(sql)
         conn.commit()
         conn.close()

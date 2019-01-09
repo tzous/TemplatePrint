@@ -2,11 +2,19 @@
 import sqlite3
 import os
 import time
+import sys
 
 #凭证元素类
 class PrintLog:
     def __init__(self):
-        self.appPath, filename = os.path.split(os.path.abspath( __file__)) 
+        #self.appPath, filename = os.path.split(os.path.abspath( __file__))
+        if hasattr(sys, '_MEIPASS'):
+            # PyInstaller会创建临时文件夹temp
+            # 并把路径存储在_MEIPASS中
+            self.appPath = os.path.dirname(os.path.realpath(sys.executable))
+        else:
+            self.appPath, filename = os.path.split(os.path.abspath(__file__))
+
         self.logdb = self.appPath + '/data/printlog.db'
         self.prlogs = [] #打印记录
         self.emdatas = [] #明细数据       
