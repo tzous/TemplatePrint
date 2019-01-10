@@ -156,7 +156,7 @@ class PrintLogDlg(QDialog,Ui_PrintLogDlg):
         ret = QMessageBox.information(self,"Question",msg, QMessageBox.Yes|QMessageBox.No )
         if ret != QMessageBox.Yes:
                 return
-        self.printlog.DeletePrintLog(prdate, vtext)
+        self.printlog.deletePrintLog(prdate, vtext)
         self.voucher = None
         self.logdatas = [] 
         self.initUi()
@@ -166,7 +166,7 @@ class PrintLogDlg(QDialog,Ui_PrintLogDlg):
         ret = QMessageBox.information(self,"Question",msg, QMessageBox.Yes|QMessageBox.No )
         if ret != QMessageBox.Yes:
                 return
-        self.printlog.DeletePrintLogByID(int(self.logdatas[0]))
+        self.printlog.deletePrintLogByID(int(self.logdatas[0]))
         self.onClickedbtnQuery()
 
         
@@ -176,4 +176,4 @@ class PrintLogDlg(QDialog,Ui_PrintLogDlg):
             return
         self.onClickedtvLogDetails()
         self.contextMenu.exec_(QCursor.pos()) #在鼠标位置显示
-        
+

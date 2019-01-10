@@ -8,7 +8,9 @@ from DesignCanvas import DesignCanvas  # 画板
 from Voucher import Voucher, Element  # 模板类
 from SysData import SysData  # 系统数据
 
-#新建模板对话框
+
+# 新建模板对话框
+# noinspection SpellCheckingInspection
 class NewVoucherDlg(QtWidgets.QDialog, Ui_NewVoucherDlg):
 
     def __init__(self):
@@ -22,18 +24,18 @@ class NewVoucherDlg(QtWidgets.QDialog, Ui_NewVoucherDlg):
         # 取消
         self.btnCancel.clicked.connect(self.reject)
 
-    #初始化下拉框
+    # 初始化下拉框
     def initTypes(self):
         for t in self.sysData.types:
             self.cmbType.addItem(t[1])
             self.typeIds.append(t[0])
 
-    #得到所选的类别ID
+    # 得到所选的类别ID
     def getCurrType(self):
         return self.typeIds[self.cmbType.currentIndex()]
 
-    #设置类别下拉框中当前项
-    def setCurrType(self,curtype):
+    # 设置类别下拉框中当前项
+    def setCurrType(self, curtype):
         i = 0
         for t in self.typeIds:
             if t == curtype:

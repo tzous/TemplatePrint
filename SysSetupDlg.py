@@ -6,15 +6,17 @@ from PyQt5 import QtWidgets
 from Ui_SysSetupDlg import Ui_SysSetupDlg
 from SysData import SysData
 
-#打印设置对话框
-class SysSetupDlg(QtWidgets.QDialog,Ui_SysSetupDlg):    
-    def __init__(self):    
-        super(SysSetupDlg,self).__init__()    
+
+# 打印设置对话框
+# noinspection SpellCheckingInspection
+class SysSetupDlg(QtWidgets.QDialog, Ui_SysSetupDlg):
+    def __init__(self):
+        super(SysSetupDlg, self).__init__()
         self.setupUi(self)
         self.sysData = SysData()
         self.initUi()
         self.btnOK.clicked.connect(self.onClickedbtnOK)
-        
+
     def initUi(self):
         self.edtLeftMargin.setText(str(self.sysData.leftmargin))
         self.edtTopMargin.setText(str(self.sysData.topmargin))
@@ -31,7 +33,3 @@ class SysSetupDlg(QtWidgets.QDialog,Ui_SysSetupDlg):
 
         self.sysData.saveSysData()
         self.accept()
-        
-
-            
-    

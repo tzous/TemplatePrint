@@ -6,9 +6,11 @@ from PyQt5 import QtWidgets
 from Ui_TypeSelectDlg import Ui_TypeSelectDlg
 from SysData import SysData
 
-class TypeSelectDlg(QtWidgets.QDialog,Ui_TypeSelectDlg):    
-    def __init__(self):    
-        super(TypeSelectDlg,self).__init__()    
+
+# noinspection PyAttributeOutsideInit
+class TypeSelectDlg(QtWidgets.QDialog, Ui_TypeSelectDlg):
+    def __init__(self):
+        super(TypeSelectDlg, self).__init__()
         self.setupUi(self)
         self.initUi()
         self.lstTypes.clicked.connect(self.onClickedlstTypes)
@@ -23,8 +25,8 @@ class TypeSelectDlg(QtWidgets.QDialog,Ui_TypeSelectDlg):
             self.typeIds.append(t[0])
             self.typeNames.append(QtWidgets.QListWidgetItem(t[1]))
         for i in range(len(self.typeNames)):
-            self.lstTypes.insertItem(i+1,self.typeNames[i])
+            self.lstTypes.insertItem(i + 1, self.typeNames[i])
 
     def onClickedlstTypes(self):
-        #item = self.lstTypes.currentItem()
+        # item = self.lstTypes.currentItem()
         self.curTypeid = self.typeIds[self.lstTypes.currentRow()]

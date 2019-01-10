@@ -30,6 +30,7 @@ from TypeSelectDlg import TypeSelectDlg  # 类别选择对话框
 from TypeNameDlg import TypeNameDlg  # 类别名称对话框
 
 
+# noinspection SpellCheckingInspection,PyAttributeOutsideInit
 class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
@@ -146,20 +147,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # 新建模板
     def onClickedbtnModNew(self):
-        self.voucher = None   #当前凭证设为None
-        self.treeWidget.clearSelection()   #清除模板列表选择
+        self.voucher = None  # 当前凭证设为None
+        self.treeWidget.clearSelection()  # 清除模板列表选择
         self.printCanvas.setVoucher(None)  # 凭证显示输入画板重置
-        self.printCanvas.initUi()    #打印数据录入画板初始化，更新显示
+        self.printCanvas.initUi()  # 打印数据录入画板初始化，更新显示
         self.printCanvas.update()
 
-        self.DesignWindow.show()    #显示模板设计窗口
-        if self.currtype != None:
+        self.DesignWindow.show()  # 显示模板设计窗口
+        if self.currtype is not None:
             self.DesignWindow.currType = self.currtype
-        self.DesignWindow.clickedbtnNewModel()    #执行新建模板功能
+        self.DesignWindow.clickedbtnNewModel()  # 执行新建模板功能
 
     # 修改模板
     def onClickedbtnModModi(self):
-        if self.voucher == None:
+        if self.voucher is None:
             return
         self.DesignWindow.voucher = self.voucher  # 当前模板
         self.DesignWindow.designCanvas.setVoucher(self.voucher)
@@ -174,13 +175,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # 删除模板
     def onClickedbtnModDel(self):
-        if self.voucher == None:
+        if self.voucher is None:
             return
         ret = QMessageBox.information(self, "Question", "是否删除当前模板？", QMessageBox.Yes | QMessageBox.No)
         if ret != QMessageBox.Yes:
             return
         # 按类别及模板名称删除系统库中模板信息，初始化当前模板等数据
-        self.sysData.DeleteVoucherByTypeIDName(self.currtype, self.voucher.name)
+        self.sysData.deleteVoucherByTypeIDName(self.currtype, self.voucher.name)
         self.voucher = None
         self.currtype = None
         self.printCanvas.setVoucher(None)  # 凭证显示输入画板重置
@@ -190,8 +191,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # 模板类别管理
     def onClickedbtnModType(self):
-        dlg = TypeManageDlg()
-        dlg.exec_()
+        tmdlg = TypeManageDlg()
+        tmdlg.exec_()
         self.refreshModel()
 
     # 刷新树形控件模板列表及字段录入模板
@@ -231,7 +232,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         child1.setText(5, v[1])  # 凭证名称
                         self.voucherlist.append(child1)
         # 以下为刷新字段录入画板
-        if self.voucher == None:
+        if self.voucher is None:
             return
         self.voucher.load(self.sysData.templatePath, self.voucher.name)  # 按凭证名称重新导入凭证模板信息,用于模板修改后刷新屏幕
         self.printCanvas.setVoucher(self.voucher)
@@ -271,7 +272,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # 单笔打印
     def onClickedbtnPrintSingle(self):
-        if self.voucher == None:
+        if self.voucher is None:
             return
         self.printer = QPrinter()  # 初始化QPrinter实例
         self.printer.setPageSize(QPrinter.A4)  # 打印纸默认使用A4纸
@@ -304,14 +305,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # 清初控件输入内容，重新录入
     def onClickedbtnPrintNewData(self):
-        ret = QMessageBox.information(self, "Question", "是否清初当前录入的所有内容？", QMessageBox.Yes | QMessageBox.No)
+        ret = QMessageBox.information(self, "Question", "是否清除当前录入的所有内容？", QMessageBox.Yes | QMessageBox.No)
         if ret != QMessageBox.Yes:
             return
         self.printCanvas.initUi()
 
     # 导出模板，实际操作就是将模板拷入指定文件夹
     def onClickedbtnModExp(self):
-        if self.voucher == None:
+        if self.voucher is None:
             return
         filename, _ = QFileDialog.getSaveFileName(self, '请输入导出模板名称', '', '模板 (*.tdb)')
         if filename:
@@ -332,12 +333,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             shutil.copy(sourcefile, targetfile)  # 拷贝文件
             voucher = Voucher()
             voucher.load(self.sysData.templatePath, dlg.edtName.text())  # 按凭证名称导入凭证模板信息
-            self.sysData.SaveNewVoucher(voucher, dlg.getCurrType())  # 写入系统库
+            self.sysData.saveNewVoucher(voucher, dlg.getCurrType())  # 写入系统库
             self.refreshModel()
 
     # 批量打印，调用批量打印对话框，打印前需先选择当前模板
     def onClickedbtnBatchPrint(self):
-        if self.voucher == None:
+        if self.voucher is None:
             return
         self.voucher.leftmargin = self.sysData.leftmargin
         self.voucher.topmargin = self.sysData.topmargin
@@ -354,7 +355,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # 保存打印数据到打印数据仓库
     def onClickedbtnPrintSaveData(self):
-        if self.voucher == None:
+        if self.voucher is None:
             return
 
         for i in range(0, self.voucher.getElementNumbers()):
@@ -374,9 +375,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # 票据仓库，可以从中选择历史打印数据用于重新打印，或者清理打印历史记录
     def onClickedbtnPrintDatas(self):
-        dlg = PrintLogDlg()
-        if dlg.exec_():
-            if dlg.logdatas == []:
+        prdlg = PrintLogDlg()
+        if prdlg.exec_():
+            if prdlg.logdatas == []:
                 return
             self.voucher = Voucher()
             self.voucher.load(self.sysData.templatePath, dlg.logdatas[2])
@@ -408,19 +409,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # 移动模板到其他类别中
     def onactionMove(self):
-        dlg = TypeSelectDlg()
-        if dlg.exec_():
-            if dlg.curTypeid == -1:
+        tsdlg = TypeSelectDlg()
+        if tsdlg.exec_():
+            if tsdlg.curTypeid == -1:
                 return
-            self.sysData.UpdateVoucherType(self.curvid, dlg.curTypeid)
+            self.sysData.updateVoucherType(self.curvid, tsdlg.curTypeid)
             self.refreshModel()  # 移动后刷新窗口
 
     # 新增类别
     def onactionNewType(self):
-        dlg = TypeNameDlg()
-        if dlg.exec_():
+        tndlg = TypeNameDlg()
+        if tndlg.exec_():
             mytools = MyTools()
-            typeName = mytools.trim(dlg.edtTypeName.text())
+            typeName = mytools.trim(tndlg.edtTypeName.text())
             if typeName == '':
                 return
             self.sysData.SaveNewType(typeName)
@@ -428,13 +429,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # 修改类别名称
     def onactionModifyType(self):
-        dlg = TypeNameDlg()
-        if dlg.exec_():
+        tndlg = TypeNameDlg()
+        if tndlg.exec_():
             mytools = MyTools()
             typeName = mytools.trim(dlg.edtTypeName.text())
             if typeName == '':
                 return
-            self.sysData.UpdateTypeByID(self.currtype, typeName)
+            self.sysData.updateTypeByID(self.currtype, typeName)
             self.refreshModel()  # 修改后刷新窗口
 
     # 删除类别
@@ -442,7 +443,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ret = QMessageBox.information(self, "Question", "是否删除当前类别？", QMessageBox.Yes | QMessageBox.No)
         if ret != QMessageBox.Yes:
             return
-        ret = self.sysData.DeleteTypeByID(self.currtype)
+        ret = self.sysData.deleteTypeByID(self.currtype)
         if ret < 0:
             QMessageBox.information(self, "Information", "当前类别下有模板，不能删除！", QMessageBox.Ok)
         else:
@@ -451,7 +452,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # 树形控件右键事件
     def showContextMenu(self, ev):
         item = self.treeWidget.itemAt(ev)  # ev为鼠标右击位置，相对于控件内部的QPoint
-        if item == None:                   #不是点在树控件的项目上，则清除当前选择
+        if item is None:  # 不是点在树控件的项目上，则清除当前选择
             self.treeWidget.clearSelection()
             return
         self.onClickedTreeWidget()  # 先执行左键单击事件，设定当前模板等信息

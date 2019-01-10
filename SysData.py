@@ -7,6 +7,7 @@ import sys
 
 
 # 凭证元素类
+# noinspection SpellCheckingInspection,PyPep8Naming
 class SysData:
     def __init__(self):
         self.sysparm = []  # 系统数据
@@ -25,7 +26,6 @@ class SysData:
         self.font = QtGui.QFont('宋体', 10, QtGui.QFont.Normal)  # 默认字体
         self.printer = None  # 默认打印机
         self.autosave = False  # 打印记录是否自动保存
-        # self.appPath, filename = os.path.split(os.path.abspath(__file__))
         if hasattr(sys, '_MEIPASS'):
             # PyInstaller会创建临时文件夹temp
             # 并把路径存储在_MEIPASS中
@@ -65,9 +65,9 @@ class SysData:
                 offsety   INT);''')
 
             # 本系统名称,当前最大类别编号,当前最大凭证编号,x偏移,y偏移,默认打印机,默认字体,打印记录是否自动保存
-            sql = "INSERT INTO sysparm (sysname,maxtypeid,maxvoucherid,leftmargin,topmargin,printer,defaultfont,autosave,batchprint) \
-                values ('%s',%d,%d,%d,%d,'%s','%s','%s','%s')" % (
-                '简单凭证打印', 3, 5, 11, 11, '', QtGui.QFont('宋体', 10, QtGui.QFont.Normal).toString(), 'False', 'True')
+            sql = "INSERT INTO sysparm (sysname,maxtypeid,maxvoucherid,leftmargin,topmargin,printer,defaultfont," \
+                  "autosave,batchprint) values ('%s',%d,%d,%d,%d,'%s','%s','%s','%s')" % \
+                  ('简单凭证打印', 3, 5, 11, 11, '', QtGui.QFont('宋体', 10, QtGui.QFont.Normal).toString(), 'False', 'True')
             c.execute(sql)
             # 类别编号，类别名称，父类别编号
             sql = "INSERT INTO types (typeid,typename,parentid) \
@@ -147,7 +147,7 @@ class SysData:
         conn.close()
 
     # 保存新凭证信息至系统数据库,v-凭证类 tid-分类
-    def SaveNewVoucher(self, v, tid):
+    def saveNewVoucher(self, v, tid):
         conn = sqlite3.connect(self.parmdb)
         c = conn.cursor()
         # 删除库中其他相同名称和类别的凭证
@@ -155,7 +155,7 @@ class SysData:
         c.execute(sql)
         # 更新maxvoucherid
         self.maxvoucherid = self.maxvoucherid + 1
-        sql = "UPDATE sysparm set maxvoucherid=%d " % (self.maxvoucherid)
+        sql = "UPDATE sysparm set maxvoucherid=%d " % self.maxvoucherid
         c.execute(sql)
 
         # 凭证编号，凭证名称，凭证显示名称，类别编号
@@ -172,7 +172,7 @@ class SysData:
     def existVoucher(self, vname):
         conn = sqlite3.connect(self.parmdb)
         c = conn.cursor()
-        sql = "select count(*) from vouchers where vname='%s'" % (vname)
+        sql = "select count(*) from vouchers where vname='%s'" % vname
         ts = c.execute(sql)
         icount = 0
         for t in ts:
@@ -182,7 +182,7 @@ class SysData:
         return True if icount > 0 else False
 
     # 根据凭证id将凭证信息从系统库中删除
-    def DeleteVoucherByID(self, vid):
+    def deleteVoucherByID(self, vid):
         conn = sqlite3.connect(self.parmdb)
         c = conn.cursor()
         # 凭证编号，凭证名称，凭证显示名称，类别编号
@@ -194,7 +194,7 @@ class SysData:
         return 0
 
     # 根据类别id和凭证名称将凭证信息从系统库中删除???
-    def DeleteVoucherByTypeIDName(self, tid, vname):
+    def deleteVoucherByTypeIDName(self, tid, vname):
         conn = sqlite3.connect(self.parmdb)
         c = conn.cursor()
         # 凭证编号，凭证名称，凭证显示名称，类别编号
@@ -206,7 +206,7 @@ class SysData:
         return 0
 
     # 将模板移动到新类别中
-    def UpdateVoucherType(self, vid, typeid):
+    def updateVoucherType(self, vid, typeid):
         conn = sqlite3.connect(self.parmdb)
         c = conn.cursor()
         # 凭证编号，凭证名称，凭证显示名称，类别编号
@@ -218,16 +218,16 @@ class SysData:
         return 0
 
     # 保存新类别至系统库
-    def SaveNewType(self, tname):
+    def saveNewType(self, tname):
         conn = sqlite3.connect(self.parmdb)
         c = conn.cursor()
-        sql = "select count(*) from types where typename='%s'" % (tname)
+        sql = "select count(*) from types where typename='%s'" % tname
         ts = c.execute(sql)
         for t in ts:
             if int(t[0]) > 0:
                 return -1
         self.maxtypeid = self.maxtypeid + 1
-        sql = "UPDATE sysparm set maxtypeid=%d " % (self.maxtypeid)
+        sql = "UPDATE sysparm set maxtypeid=%d " % int(self.maxtypeid)
         c.execute(sql)
         # 类别编号，类别名称，父类别编号
         sql = "INSERT INTO types (typeid,typename,parentid) \
@@ -239,11 +239,11 @@ class SysData:
         return 0
 
     # 更新类别至系统库
-    def UpdateTypeByID(self, tid, tname):
+    def updateTypeByID(self, tid, tname):
         conn = sqlite3.connect(self.parmdb)
         c = conn.cursor()
         # 类别编号，类别名称，父类别编号
-        sql = "update types set typename='%s' where typeid=%d " % (tname, tid)
+        sql = "update types set typename='%s' where typeid=%d " % (tname, int(tid))
         c.execute(sql)
         conn.commit()
         conn.close()
@@ -251,10 +251,10 @@ class SysData:
         return 0
 
     # 从系统库中删除类别信息
-    def DeleteTypeByID(self, tid):
+    def deleteTypeByID(self, tid):
         conn = sqlite3.connect(self.parmdb)
         c = conn.cursor()
-        sql = "select count(*) from vouchers WHERE typeid=%d" % (tid)
+        sql = "select count(*) from vouchers WHERE typeid=%d" % tid
         ts = c.execute(sql)
         for t in ts:
             if int(t[0]) > 0:
