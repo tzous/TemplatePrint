@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Works\python\SimplePrint\BatchPrintDlg.ui'
+# Form implementation generated from reading ui file 'BatchPrintDlg.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -79,14 +79,4 @@ class Ui_BatchPrintDlg(object):
         self.label_4.setText(_translate("BatchPrintDlg", "终止页："))
         self.edtEndPage.setInputMask(_translate("BatchPrintDlg", "9999"))
         self.btnPrint.setText(_translate("BatchPrintDlg", "打印"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    BatchPrintDlg = QtWidgets.QDialog()
-    ui = Ui_BatchPrintDlg()
-    ui.setupUi(BatchPrintDlg)
-    BatchPrintDlg.show()
-    sys.exit(app.exec_())
 

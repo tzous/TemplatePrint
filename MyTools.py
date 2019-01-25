@@ -17,11 +17,12 @@ class MyTools:
 
     # 数字小写一对一转汉字大写
     @staticmethod
-    def convertNumToCap(s):
+    def convertNumToCap(d):
         if not MyTools.legal_numbers(s):
             return ''
         dictChinese = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖']
         A = []
+        s = "%d" %d
         for c in list(s):
             i = int(c)
             A.append(dictChinese[i])

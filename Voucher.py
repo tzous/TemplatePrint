@@ -89,7 +89,7 @@ class Element:
                 elif self.type == 'numcap':
                     self.val = int(v)
                     self.text = mytools.convertNumToCap(self.val)
-                elif self.type == 'moneyCap':
+                elif self.type == 'moneycap':
                     self.val = float('%.2f' % v)
                     self.text = mytools.convertNumToChinese(self.val)
             else:  # 非法数值，置空值
