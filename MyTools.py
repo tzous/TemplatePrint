@@ -18,8 +18,6 @@ class MyTools:
     # 数字小写一对一转汉字大写
     @staticmethod
     def convertNumToCap(d):
-        if not MyTools.legal_numbers(s):
-            return ''
         dictChinese = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖']
         A = []
         s = "%d" %d
@@ -31,8 +29,6 @@ class MyTools:
     # 金额小写转大写
     @staticmethod
     def convertNumToChinese(totalPrice):
-        if not MyTools.legal_numbers(totalPrice):
-            return ''
         dictChinese = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖']
         unitChinese = ['', '拾', '佰', '仟', '萬', '拾', '佰', '仟']
         # 将整数部分和小数部分区分开
