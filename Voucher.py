@@ -361,7 +361,7 @@ class Voucher:
     # 追加凭证元素
     def appendElement(self, e):
         n = len(self.elements)  # 将当前凭证数作为key
-        ename = "e%d" % n  # 元素命名：'e'+序号
+        ename = "e%04d" % n  # 元素命名：'e'+序号
         e.setName(ename)
         self.elements[n] = e
 
