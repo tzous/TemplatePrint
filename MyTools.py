@@ -1,6 +1,5 @@
 # coding=utf-8
-import math
-
+from decimal import Decimal
 
 # 自有工具类
 # noinspection PyPep8Naming
@@ -26,64 +25,37 @@ class MyTools:
             A.append(dictChinese[i])
         return ''.join(A)
 
-    # 金额小写转大写
     @staticmethod
-    def convertNumToChinese(totalPrice):
-        dictChinese = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖']
-        unitChinese = ['', '拾', '佰', '仟', '萬', '拾', '佰', '仟']
-        # 将整数部分和小数部分区分开
-        partA = int(math.floor(totalPrice))
-        partB = round(totalPrice - partA, 2)
-        strPartA = str(partA)
-        strPartB = ''
-        if partB != 0:
-            strPartB = str(partB)[2:]
+    def convertNumToChinese(n):
+        units = ['', '万', '亿']
+        nums = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖']
+        decimal_label = ['角', '分']
+        small_int_label = ['', '拾', '佰', '仟']
+        d = Decimal(n).quantize(Decimal('0.00'))
+        int_part, decimal_part = str(int(d)), str(d - int(d))[2:] # 分离整数和小数部分
 
-        singleNum = []
-        if len(strPartA) != 0:
-            i = 0
-            while i < len(strPartA):
-                singleNum.append(strPartA[i])
-                i = i + 1
-        # 将整数部分先压再出，因为可以从后向前处理，好判断位数
-        tnumChinesePartA = []
-        numChinesePartA = []
-        j = 0
-        bef = '0'
-        if len(strPartA) != 0:
-            while j < len(strPartA):
-                curr = singleNum.pop()
-                if curr == '0' and bef != '0':
-                    tnumChinesePartA.append(dictChinese[0])
-                    bef = curr
-                if curr != '0':
-                    tnumChinesePartA.append(unitChinese[j])
-                    tnumChinesePartA.append(dictChinese[int(curr)])
-                    bef = curr
-                if j == 3:
-                    tnumChinesePartA.append('萬')
-                    bef = '0'
-                j = j + 1
-
-            for i in range(len(tnumChinesePartA)):
-                numChinesePartA.append(tnumChinesePartA.pop())
-        A = ''
-        for i in numChinesePartA:
-            A = A + i
-        # 小数部分很简单，只要判断下角是否为零
-        B = ''
-        if len(strPartB) == 1:
-            B = dictChinese[int(strPartB[0])] + '角'
-        if len(strPartB) == 2 and strPartB[0] != '0':
-            B = dictChinese[int(strPartB[0])] + '角' + dictChinese[int(strPartB[1])] + '分'
-        if len(strPartB) == 2 and strPartB[0] == '0':
-            B = dictChinese[int(strPartB[0])] + dictChinese[int(strPartB[1])] + '分'
-
-        if len(strPartB) == 0:
-            S = A + '圆整'
+        res = []
+        if decimal_part:
+            tmp = ''.join([nums[int(x)] + y for x, y in list(zip(decimal_part, decimal_label)) if x != '0'])
+            if tmp == '':
+                tmp = '整'
+            res.append(tmp)
         else:
-            S = A + '圆' + B
-        return S
+            res.append('整')
+
+        if int_part != '0':
+            res.append('圆')
+            while int_part:
+                small_int_part, int_part = int_part[-4:], int_part[:-4]
+                tmp = ''.join([nums[int(x)] + (y if x != '0' else '') for x, y in
+                               list(zip(small_int_part[::-1], small_int_label))[::-1]])
+                tmp = tmp.rstrip('零').replace('零零零', '零').replace('零零', '零')
+                unit = units.pop(0)
+                if tmp:
+                    tmp += unit
+                    res.append(tmp)
+        return ''.join(res[::-1])
+
 
         # 是否合法数字
 

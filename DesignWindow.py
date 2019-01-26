@@ -122,8 +122,8 @@ class DesignWindow(QtWidgets.QMainWindow, Ui_DesignWindow):
             # 保存到模板库中
             self.voucher.save(self.sysData.templatePath)
             if self.newmod:  # 模板修改或者已保存过，则无需再保存到系统库中
-                # 保存到系统数据库中
-                self.sysData.SaveNewVoucher(self.voucher, self.currType)
+                # 保存到系统数据库中s
+                self.sysData.saveNewVoucher(self.voucher, self.currType)
                 self.newmod = False
             self.designCanvas.edited = False
             self.edited = False
