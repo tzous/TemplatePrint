@@ -82,8 +82,8 @@ class PrintLogDlg(QDialog,Ui_PrintLogDlg):
         i = 0
         for t in self.printlog.prlogs:
             if i == row:
-                self.logdatas = t #保存凭证信息
-                self.printlog.loadEmDataByLid(self.logdatas[0]) # 读入明细数据
+                self.logdatas = t     #保存凭证信息
+                self.printlog.loadEmDataByLid(self.logdatas[0])    # 读入明细数据
                 self.emdatas = self.printlog.emdatas
                 break
             i = i + 1

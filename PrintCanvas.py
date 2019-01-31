@@ -51,7 +51,7 @@ class PrintCanvas(QWidget):
         if self.voucher is None:
             return
         i = 0
-        while i < self.voucher.getElementNumbers() and i < 10:
+        while i < self.voucher.getElementNumbers():
             em = self.voucher.getElement(i)
             if em.type == 'check':
                 if em.getVal() == em.checkVal:

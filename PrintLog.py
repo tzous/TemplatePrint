@@ -136,13 +136,18 @@ class PrintLog:
         c = conn.cursor()
         sql = "INSERT INTO prlog (prdate,vname,vtext,em1,em2,em3,em4,em5,em6,em7,em8,em9,em10) values ('%s','%s','%s'"\
               % (time.strftime("%Y-%m-%d", time.localtime()), voucher.name, voucher.text)
-        for i in range(len(voucher.elements)):
+        i = 0
+        for j in range(len(voucher.elements)):
             if i < 10:
                 # 拼接最长10个字段到sql
-                em = voucher.getElement(i)
-                sql = sql + ",'" + em.getText() + "'"
-        if len(voucher.elements) < 10:
-            for i in range(len(voucher.elements), 10):
+                em = voucher.getElement(j)
+                if em.nmajor == 1:  # 重要字段保存到数据仓库
+                    sql = sql + ",'" + em.getText() + "'"
+                    i = i + 1
+        if i == 0:       # 如果无重要字段，则无需保存
+            return
+        if i < 10:
+            for i in range(i, 10):
                 sql = sql + ",''"
         sql = sql + ")"
         c.execute(sql)

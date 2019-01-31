@@ -57,7 +57,7 @@ class MyTools:
         return ''.join(res[::-1])
 
 
-        # 是否合法数字
+    # 是否合法数字
 
     @staticmethod
     def legal_numbers(s):

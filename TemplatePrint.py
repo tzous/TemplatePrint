@@ -303,7 +303,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         painter.restore()
         QMessageBox.information(self, "Information", "单笔打印完成", QMessageBox.Ok)
 
-    # 清初控件输入内容，重新录入
+    # 清除控件输入内容，重新录入
     def onClickedbtnPrintNewData(self):
         ret = QMessageBox.information(self, "Question", "是否清除当前录入的所有内容？", QMessageBox.Yes | QMessageBox.No)
         if ret != QMessageBox.Yes:
@@ -380,14 +380,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if prdlg.logdatas == []:
                 return
             self.voucher = Voucher()
-            self.voucher.load(self.sysData.templatePath, dlg.logdatas[2])
+            self.voucher.load(self.sysData.templatePath, prdlg.logdatas[2])
             if self.voucher == None:
                 QMessageBox.information(self, "Erroe", "打开凭证模板出错！", QMessageBox.Ok)
                 return
 
             for i in range(0, self.voucher.getElementNumbers()):
                 em = self.voucher.getElement(i)
-                txt = dlg.emdatas[i][2]  # 从录入明细中获得输入值，更新至输入控件中
+                txt = prdlg.emdatas[i][2]  # 从录入明细中获得输入值，更新至输入控件中
                 em.setVal(txt)
                 self.voucher.updateElement(i, em)
 

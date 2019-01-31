@@ -16,6 +16,7 @@ class Element:
         self.height = 26  # 高
 
         self.name = 'name'  # 元素名称
+        self.nmajor = 0      # 是否重要字段，1-是则保存到数据仓库字段中，0-否
         self.val = '文本'  # 元素值
         self.text = '文本'  # 显示文本，与self.val关联
         self.type = 'text'  # 当前元素类别,默认文本text
@@ -462,7 +463,8 @@ class Voucher:
                 ehaligh TEXT,
                 evalign TEXT,
                 elinewrap TEXT,
-                eprintborder TEXT);''')
+                eprintborder TEXT,
+                emajor         int NOT NULL);''')
             c.execute('''CREATE TABLE background
                 (jpg TEXT NOT NULL);''')
 
@@ -483,12 +485,12 @@ class Voucher:
         for i in range(len(self.elements)):
             # 保存每个字段
             em = self.getElement(i)
-            sql = "INSERT INTO elements (ename,epx,epy,ewidth,eheight,eval,etext,etype,elen,efont,etrim,eprefix,eprefixText,epostfix,epostfixText,emeancol,emeancolval,echeckval,ehaligh,evalign,elinewrap,eprintborder) \
-                values ('%s',%d,%d,%d,%d,'%s','%s','%s',%d,'%s','%s','%s','%s','%s','%s','%s',%d,'%s','%s','%s','%s','%s')" % (
+            sql = "INSERT INTO elements (ename,epx,epy,ewidth,eheight,eval,etext,etype,elen,efont,etrim,eprefix,eprefixText,epostfix,epostfixText,emeancol,emeancolval,echeckval,ehaligh,evalign,elinewrap,eprintborder,emajor) \
+                values ('%s',%d,%d,%d,%d,'%s','%s','%s',%d,'%s','%s','%s','%s','%s','%s','%s',%d,'%s','%s','%s','%s','%s', %d ) " % (
             em.name, int(em.getStartPoint().x()), int(em.getStartPoint().y()), int(em.width), int(em.height), em.val,
-            em.text, em.type, int(em.len), em.font.toString(), \
+            em.text, em.type, int(em.len), em.font.toString(),
             em.trim, em.prefix, em.prefixText, em.postfix, em.postfixText, em.meanCol, int(em.meanColVal), em.checkVal,
-            em.hAlign, em.vAlign, em.lineWrap, em.printBorder)
+            em.hAlign, em.vAlign, em.lineWrap, em.printBorder, int(em.nmajor))
             c.execute(sql)
 
         # 背景图
@@ -549,6 +551,7 @@ class Voucher:
             em.vAlign = int(data[19])  # 垂直对齐 top、center、bottom
             em.lineWrap = MyTools.str_to_bool(data[20])  # 是否折行
             em.printBorder = MyTools.str_to_bool(data[21])  # 是否打印边框
+            em.nmajor = int(data[22])
             self.appendElement(em)
 
         # 背景

@@ -51,6 +51,8 @@ class ItemPropertyDialog(QtWidgets.QDialog, Ui_ItemProperty):
             self.cbLineWrap.setChecked(True)
         if self.element.getPrintBorder():  # 打印边框
             self.cbPrintBorder.setChecked(True)
+        if self.element.nmajor == 1:        # 重要字段
+            self.bMajor.setChecked(True)
         self.cCheckType.setText(self.element.getCheckVal())  # 打勾项字符
 
         self.textFont.setText(self.element.font.toString())  # 字体
@@ -122,6 +124,10 @@ class ItemPropertyDialog(QtWidgets.QDialog, Ui_ItemProperty):
             self.element.lineWrap = True
         else:
             self.element.lineWrap = False
+        if self.bMajor.isChecked():
+            self.element.nmajor = 1
+        else:
+            self.element.nmajor = 0
 
         self.element.prefixText = self.cPrefixText.text()  # 前缀文本，如人民币符号¥等
         self.element.postfixText = self.cPostfixText.text()  # 后缀文本
